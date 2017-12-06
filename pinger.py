@@ -1,3 +1,4 @@
+import re
 import subprocess
 
 def run_command(command):
@@ -8,5 +9,13 @@ def run_command(command):
 
 command = 'ping -D google.com'.split()
 
+matcher = re.compile(r'\[(.*)\].*time=(.*) ms')
+
 for line in run_command(command):
-        print(line)
+    line = line.decode("utf-8").strip()
+    print(line)
+    match = matcher.match(str(line))
+    if match is not None:
+        match_groups = match.groups()
+        print(match_groups)
+
