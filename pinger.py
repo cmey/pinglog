@@ -6,7 +6,7 @@ def run_command(command):
             stderr=subprocess.STDOUT)
     return iter(p.stdout.readline, b'')
 
-command = 'ping google.com'.split()
+command = 'ping -D google.com'.split()
 
 for line in run_command(command):
         print(line)
