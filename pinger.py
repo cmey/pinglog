@@ -11,7 +11,8 @@ def run_command(command):
     return iter(p.stdout.readline, b'')
 
 dest = 'google.com'
-command = 'ping -D {dest}'.format(dest=dest).split()
+src = 'eth0'
+command = 'ping -I {src} -D {dest}'.format(src=src, dest=dest).split()
 
 matcher = re.compile(r'\[(.*)\].*time=(.*) ms')
 
