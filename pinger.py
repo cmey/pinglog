@@ -1,7 +1,15 @@
+import argparse
 import re
 import subprocess
 
 from db.db import DB
+
+
+parser = argparse.ArgumentParser(description='Ping a remote server and log the stats.')
+parser.add_argument('--dest', default="google.com", help='ping destination address (remote server)')
+parser.add_argument('--src', default="eth0", help='ping source address (local interface)')
+args = parser.parse_args()
+
 
 def run_command(command):
     p = subprocess.Popen(
@@ -10,9 +18,7 @@ def run_command(command):
         stderr=subprocess.STDOUT)
     return iter(p.stdout.readline, b'')
 
-dest = 'google.com'
-src = 'eth0'
-command = 'ping -I {src} -D {dest}'.format(src=src, dest=dest).split()
+command = 'ping -I {src} -D {dest}'.format(src=args.src, dest=args.dest).split()
 
 matcher = re.compile(r'\[(.*)\].*time=(.*) ms')
 
@@ -25,7 +31,7 @@ def process_ping_line(line, db=None):
         print("  ", match_groups)
         date, ping = match_groups
         if db is not None:
-            db.insert(date, dest, ping)
+            db.insert(date, args.dest, ping)
 
 if __name__ == '__main__':
 
